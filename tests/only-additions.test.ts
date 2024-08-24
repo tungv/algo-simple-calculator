@@ -17,4 +17,8 @@ describe("only additions", () => {
   test("has spaces", () => {
     expect(calc("1 + 4")).toBe(5);
   });
+
+  test("decimal numbers", () => {
+    expect(calc("1.5 + 2.5")).toBe(4);
+  });
 });
