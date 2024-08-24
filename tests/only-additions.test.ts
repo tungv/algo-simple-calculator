@@ -6,7 +6,11 @@ describe("only additions", () => {
     expect(calc("1+1")).toBe(2);
   });
 
-  test("1+2+3", () => {
+  test("multiple operators", () => {
     expect(calc("1+2+3")).toBe(6);
+  });
+
+  test("multiple digits", () => {
+    expect(calc("1000+2000+4000")).toBe(7000);
   });
 });
