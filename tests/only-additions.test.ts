@@ -13,4 +13,8 @@ describe("only additions", () => {
   test("multiple digits", () => {
     expect(calc("1000+2000+4000")).toBe(7000);
   });
+
+  test("has spaces", () => {
+    expect(calc("1 + 4")).toBe(5);
+  });
 });
