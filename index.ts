@@ -1,7 +1,6 @@
 import buildTree, { type BinaryNode, type LeafNode } from "./buildTree";
 import getValue from "./getValue";
 import tokenize from "./tokenize";
-import validateRoot from "./validateRoot";
 
 export default function calc(expression: string): number {
   const tokens = tokenize(expression);
@@ -17,8 +16,5 @@ export default function calc(expression: string): number {
   }
 
   const root = buildTree(tokens);
-
-  validateRoot(root);
-
   return getValue(root);
 }

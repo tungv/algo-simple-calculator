@@ -12,6 +12,38 @@ interface IncompleteBinaryNode {
   right?: IncompleteBinaryNode | LeafNode;
 }
 
+// validate the root node
+function validateRoot(node: IncompleteBinaryNode): asserts node is BinaryNode {
+  try {
+    if (typeof node !== "object") {
+      throw new Error("Invalid node. Expected object");
+    }
+
+    if (node === null) {
+      throw new Error("Invalid node. Expected non-null");
+    }
+
+    if (node.type !== "binary") {
+      throw new Error("Invalid node. Expected binary node");
+    }
+
+    if (node.left === undefined) {
+      throw new Error("Invalid node. Expected left node");
+    }
+
+    if (node.right === undefined) {
+      throw new Error("Invalid node. Expected right node");
+    }
+
+    if (node.operator === undefined) {
+      throw new Error("Invalid node. Expected operator");
+    }
+  } catch (ex) {
+    console.log("failed to validate node", node);
+    throw ex;
+  }
+}
+
 export interface BinaryNode {
   type: "binary";
   left: BinaryNode | LeafNode;
