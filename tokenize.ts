@@ -83,10 +83,12 @@ export default function tokenize(expression: string): Token[] {
   }
 
   // Push the last token
-  tokens.push({
-    type: "number",
-    value: currentToken,
-  });
+  if (currentToken) {
+    tokens.push({
+      type: "number",
+      value: currentToken,
+    });
+  }
 
   return tokens;
 }
