@@ -27,6 +27,7 @@ export default function tokenize(expression: string): Token[] {
 
       case "+":
       case "*":
+      case "/":
         tokens.push({
           type: "number",
           value: currentToken,

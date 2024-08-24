@@ -16,6 +16,9 @@ export default function getValue(node: BinaryNode | LeafNode): number {
       case "*":
         return getValue(node.left) * getValue(node.right);
 
+      case "/":
+        return getValue(node.left) / getValue(node.right);
+
       default:
         throw new Error("Invalid operator");
     }
