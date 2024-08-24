@@ -31,6 +31,13 @@ export default function calc(expression: string): number {
         });
         currentToken = "";
         break;
+
+      case " ":
+        // break switch
+        break;
+
+      default:
+        throw new Error("Invalid character");
     }
   }
 
