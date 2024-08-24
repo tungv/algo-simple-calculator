@@ -25,4 +25,9 @@ describe("multiplication", () => {
   test("precedence", () => {
     expect(calc("1 + 3 * 2")).toBe(7);
   });
+
+  test("negative numbers", () => {
+    expect(calc("3 * -3")).toBe(-9);
+    expect(calc("3 *-3")).toBe(-9);
+  });
 });

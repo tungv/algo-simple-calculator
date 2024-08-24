@@ -24,4 +24,8 @@ describe("subtraction", () => {
   test("mixed operators", () => {
     expect(calc("1 - 3 + 2")).toBe(0);
   });
+
+  test("negative numbers", () => {
+    expect(calc("-1 - 3")).toBe(-4);
+  });
 });
