@@ -134,30 +134,38 @@ function getPrecedence(operator: string): number {
   }
 }
 
-export default function buildTree(tokens: Token[]) {
-  // take the first 3 tokens and create a binary node
-  const [n1, op, n2] = tokens;
+export default function buildTree(tokens: Token[]): BinaryNode {
+  const { root, i } = buildSubTree(tokens, 0, "");
 
-  let root: BinaryNode = {
+  if (i !== tokens.length - 1) {
+    throw new Error("Invalid expression");
+  }
+
+  validateRoot(root);
+
+  return root;
+}
+
+function buildSubTree(tokens: Token[], start: number, endWhen: string) {
+  // console.log(
+  //   "sub tree tokens",
+  //   tokens.slice(start).map((t) => t.value),
+  // );
+  let incompleteRoot: IncompleteBinaryNode = {
     type: "binary",
-    left: {
-      type: "number",
-      value: Number.parseFloat(n1.value),
-    },
-    operator: op.value,
-    right: {
-      type: "number",
-      value: Number.parseFloat(n2.value),
-    },
   };
 
-  let currentPrecedence = getPrecedence(op.value);
-  let currentIncompleteNode: IncompleteBinaryNode = root;
+  let currentPrecedence = 0;
+  let currentIncompleteNode: IncompleteBinaryNode = incompleteRoot;
   let pendingReRoot = false;
 
   // walk from the 4th token to the end
-  for (let i = 3; i < tokens.length; ++i) {
+  for (let i = start; i < tokens.length; ++i) {
     const token = tokens[i];
+
+    if (token.type === "parenthesis" && token.value === endWhen) {
+      return { root: incompleteRoot, i };
+    }
 
     switch (token.type) {
       case "operator": {
@@ -166,10 +174,10 @@ export default function buildTree(tokens: Token[]) {
 
         if (precedence > currentPrecedence) {
           // add down
-          currentIncompleteNode = addDown(root, operator);
+          currentIncompleteNode = addDown(incompleteRoot, operator);
         } else {
           // add up
-          currentIncompleteNode = addUp(root, operator);
+          currentIncompleteNode = addUp(incompleteRoot, operator);
           pendingReRoot = true;
         }
         currentPrecedence = precedence;
@@ -182,10 +190,34 @@ export default function buildTree(tokens: Token[]) {
           value: Number.parseFloat(token.value),
         };
 
+        if (!currentIncompleteNode.left) {
+          currentIncompleteNode.left = leaf;
+          continue;
+        }
+
         currentIncompleteNode.right = leaf;
         if (pendingReRoot) {
-          root = currentIncompleteNode as BinaryNode;
+          incompleteRoot = currentIncompleteNode as BinaryNode;
           pendingReRoot = false;
+        }
+        break;
+      }
+
+      case "parenthesis": {
+        if (token.value === "(") {
+          const { root: subRoot, i: newI } = buildSubTree(tokens, i + 1, ")");
+          i = newI;
+
+          // console.log(
+          //   "the rest",
+          //   tokens.slice(i).map((t) => t.value),
+          // );
+
+          if (!currentIncompleteNode.left) {
+            currentIncompleteNode.left = subRoot;
+          } else {
+            currentIncompleteNode.right = subRoot;
+          }
         }
         break;
       }
@@ -195,5 +227,7 @@ export default function buildTree(tokens: Token[]) {
     }
   }
 
-  return root;
+  validateRoot(incompleteRoot);
+
+  return { root: incompleteRoot, i: tokens.length - 1 };
 }
