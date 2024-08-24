@@ -1,5 +1,5 @@
 export interface Token {
-  type: "number" | "operator";
+  type: "number" | "operator" | "parenthesis";
   value: string;
 }
 
@@ -70,6 +70,32 @@ export default function tokenize(expression: string): Token[] {
           // subtracting a negative number is allowed
           expectNegative = true;
         }
+        break;
+      }
+
+      case "(":
+        expectNegative = true;
+        tokens.push({
+          type: "parenthesis",
+          value: char,
+        });
+        currentToken = "";
+        break;
+
+      case ")": {
+        expectNegative = false;
+        if (currentToken) {
+          tokens.push({
+            type: "number",
+            value: currentToken,
+          });
+          currentToken = "";
+        }
+
+        tokens.push({
+          type: "parenthesis",
+          value: char,
+        });
         break;
       }
 
