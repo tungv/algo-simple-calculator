@@ -93,12 +93,12 @@ export default function buildTree(tokens: Token[]) {
     type: "binary",
     left: {
       type: "number",
-      value: Number.parseInt(n1.value, 10),
+      value: Number.parseFloat(n1.value),
     },
     operator: op.value,
     right: {
       type: "number",
-      value: Number.parseInt(n2.value, 10),
+      value: Number.parseFloat(n2.value),
     },
   };
 
@@ -130,7 +130,7 @@ export default function buildTree(tokens: Token[]) {
       case "number": {
         const leaf: LeafNode = {
           type: "number",
-          value: Number.parseInt(token.value, 10),
+          value: Number.parseFloat(token.value),
         };
 
         currentIncompleteNode.right = leaf;

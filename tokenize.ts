@@ -22,6 +22,7 @@ export default function tokenize(expression: string): Token[] {
       case "8":
       case "9":
       case "0":
+      case ".":
         currentToken += char;
         break;
 
