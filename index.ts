@@ -21,25 +21,15 @@ export default function calc(expression: string): number {
         break;
 
       case "+":
-        tokens.push({
-          type: "number",
-          value: currentToken,
-        });
-        tokens.push({
-          type: "operator",
-          value: "+",
-        });
-        currentToken = "";
-        break;
-
       case "-":
+      case "*":
         tokens.push({
           type: "number",
           value: currentToken,
         });
         tokens.push({
           type: "operator",
-          value: "-",
+          value: char,
         });
         currentToken = "";
         break;
@@ -164,6 +154,9 @@ function getValue(node: BinaryNode | LeaveNode): number {
 
       case "-":
         return getValue(node.left) - getValue(node.right);
+
+      case "*":
+        return getValue(node.left) * getValue(node.right);
 
       default:
         throw new Error("Invalid operator");
