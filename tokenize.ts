@@ -7,6 +7,7 @@ export default function tokenize(expression: string): Token[] {
   const tokens: Token[] = [];
 
   let currentToken = "";
+  let expectNegative = true;
 
   for (let i = 0; i < expression.length; ++i) {
     const char = expression[i];
@@ -24,15 +25,19 @@ export default function tokenize(expression: string): Token[] {
       case "0":
       case ".":
         currentToken += char;
+        expectNegative = false;
         break;
 
       case "+":
       case "*":
       case "/":
-        tokens.push({
-          type: "number",
-          value: currentToken,
-        });
+        expectNegative = true;
+        if (currentToken) {
+          tokens.push({
+            type: "number",
+            value: currentToken,
+          });
+        }
         tokens.push({
           type: "operator",
           value: char,
@@ -43,21 +48,27 @@ export default function tokenize(expression: string): Token[] {
       case "-": {
         // this token has 2 meanings, it can be a subtraction operator or a negative number
         // if the previous token is a number, it's a subtraction operator
-        if (currentToken) {
+        if (expectNegative) {
+          // it's a negative number
+          currentToken = char;
+          expectNegative = false;
+        } else {
           // meaning there are digits before the -
           // it's a subtraction operator
-          tokens.push({
-            type: "number",
-            value: currentToken,
-          });
+          if (currentToken) {
+            tokens.push({
+              type: "number",
+              value: currentToken,
+            });
+          }
           tokens.push({
             type: "operator",
             value: char,
           });
           currentToken = "";
-        } else {
-          // it's a negative number
-          currentToken = char;
+
+          // subtracting a negative number is allowed
+          expectNegative = true;
         }
         break;
       }
