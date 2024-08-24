@@ -7,7 +7,7 @@ export interface LeafNode {
 
 interface IncompleteBinaryNode {
   type: "binary";
-  left: BinaryNode | LeafNode;
+  left?: IncompleteBinaryNode | LeafNode;
   operator?: string;
   right?: IncompleteBinaryNode | LeafNode;
 }
@@ -54,7 +54,6 @@ export interface BinaryNode {
 /* add a new node to the right of tree and return the tree and the new node
  * when we have a new operation that is higher or equal precedence than the current operation
  * we will always add it the rightmost node and replace the right node with a binary node
- * assumption: the rightmost node is always a leaf node
  *
  *    1 + 2 * 3
  *
@@ -62,13 +61,21 @@ export interface BinaryNode {
  *  1   2       1   *
  *                2   3
  **/
-function addDown(tree: BinaryNode, operator: string): IncompleteBinaryNode {
+function addDown(
+  tree: IncompleteBinaryNode,
+  operator: string,
+): IncompleteBinaryNode {
   let parentOfTheRightmostNode = tree;
   let rightmostNode = tree.right;
 
-  while (rightmostNode.type === "binary") {
+  while (rightmostNode && rightmostNode.type === "binary") {
     parentOfTheRightmostNode = rightmostNode;
     rightmostNode = rightmostNode.right;
+  }
+
+  if (!rightmostNode) {
+    parentOfTheRightmostNode.operator = operator;
+    return parentOfTheRightmostNode;
   }
 
   // replace the rightmost node with a binary node
@@ -94,7 +101,17 @@ function addDown(tree: BinaryNode, operator: string): IncompleteBinaryNode {
  * 1   2            *     3
  *                1   2
  */
-function addUp(tree: BinaryNode, operator: string): IncompleteBinaryNode {
+function addUp(
+  tree: IncompleteBinaryNode,
+  operator: string,
+): IncompleteBinaryNode {
+  if (!tree.operator) {
+    tree.operator = operator;
+    return tree;
+  }
+
+  validateRoot(tree);
+
   return {
     type: "binary",
     left: tree,
