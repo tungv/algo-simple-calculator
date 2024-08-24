@@ -8,6 +8,32 @@ this is an exercise to create a simple calculator in TypeScript that supports
 4. Division
 5. Parentheses
 
+Example inputs:
+
+```js
+// two operands
+calc("1 + 2"); // 3
+calc("3 * 2"); // 6
+calc("3 - 1"); // 2
+calc("3 / 2"); // 1.5
+
+// decimal numbers
+calc("3.5 + 2.5"); // 6
+
+// multiple operators
+calc("11 + 222 + 3333 + 44444"); // 46810
+
+// mixed precedence
+calc("3 + 2 * 2"); // 7
+calc("3 + 8/2"); // 7
+
+// parentheses
+calc("1 + 2 * (3 - 4)"); // -1
+
+// nested parentheses
+calc("2 * (3 + -4) + 21 / ((3 * 3) - 2)"); // 1
+```
+
 ## How to run test
 
 ```bash
