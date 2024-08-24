@@ -21,7 +21,6 @@ export default function calc(expression: string): number {
         break;
 
       case "+":
-      case "-":
       case "*":
         tokens.push({
           type: "number",
@@ -33,6 +32,28 @@ export default function calc(expression: string): number {
         });
         currentToken = "";
         break;
+
+      case "-": {
+        // this token has 2 meanings, it can be a subtraction operator or a negative number
+        // if the previous token is a number, it's a subtraction operator
+        if (currentToken) {
+          // meaning there are digits before the -
+          // it's a subtraction operator
+          tokens.push({
+            type: "number",
+            value: currentToken,
+          });
+          tokens.push({
+            type: "operator",
+            value: char,
+          });
+          currentToken = "";
+        } else {
+          // it's a negative number
+          currentToken = char;
+        }
+        break;
+      }
 
       case " ":
         // break switch
