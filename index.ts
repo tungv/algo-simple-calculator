@@ -32,6 +32,18 @@ export default function calc(expression: string): number {
         currentToken = "";
         break;
 
+      case "-":
+        tokens.push({
+          type: "number",
+          value: currentToken,
+        });
+        tokens.push({
+          type: "operator",
+          value: "-",
+        });
+        currentToken = "";
+        break;
+
       case " ":
         // break switch
         break;
@@ -149,6 +161,9 @@ function getValue(node: BinaryNode | LeaveNode): number {
     switch (node.operator) {
       case "+":
         return getValue(node.left) + getValue(node.right);
+
+      case "-":
+        return getValue(node.left) - getValue(node.right);
 
       default:
         throw new Error("Invalid operator");
